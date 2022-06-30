@@ -1,4 +1,8 @@
-const getNotes = require('./notes')
+const validator = require('validator')
+const getNotes = require('./notes.js')
 
-const msg = getNotes()
-console.log(msg)
+const mynotes = getNotes()
+
+console.log(mynotes)
+
+console.log(validator.isURL('https://github.com/markmc1993'))
