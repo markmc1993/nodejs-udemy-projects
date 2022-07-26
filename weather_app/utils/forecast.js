@@ -1,16 +1,25 @@
 const request = require('postman-request')
 const access_key = require('./../api_key.json')
 
+//function forecast taking lat and long from app.js
 const forecast = (lat, long, callback) => {
+    //// access weatherstack api using lat and long sent from app.js and access key stored in json file
     const url = ('http://api.weatherstack.com/current?access_key=' + access_key[0] + '&query='+ lat + ',' + long + '&units=m')
     
-    request({ url: url, json: true }, (error, response) => {
+    //request function storing object conatining url and setting json as true
+    //error if there is an error and body from response object to reduce the amount of code to write
+    request({ url, json: true }, (error, { body }) => {
+        //callback if error such as no connection to url
         if(error){
             callback('Unable to connect to weather services')
-        } else if(response.body.error){
+
+        //callback if no error but lat and long provided are nonsense
+        } else if(body.error){
             callback('Unable to find location. Try another search', undefined)
+
+        //if no error and a proper location was provided callback string
         } else{
-            callback(undefined, (response.body.current.weather_descriptions[0] + '. It is currently ' + response.body.current.temperature + ' degreees out. It feels like ' + response.body.current.feelslike  + ' degrees out.'))
+            callback(undefined, (body.current.weather_descriptions[0] + '. It is currently ' + body.current.temperature + ' degreees out. It feels like ' + body.current.feelslike  + ' degrees out.'))
         }
     })
 }
